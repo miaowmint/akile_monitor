@@ -3,7 +3,7 @@
 # 下载 ak_monitor
 mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
 wget -O config.json https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/config.json
-wget -O ak_monitor https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/ak_monitor && chmod 755 ak_monitor
+wget -O ak_monitor https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/ak_monitor && chmod 777 ak_monitor      
 wget -O /etc/systemd/system/ak_monitor.service https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_monitor.service && chmod +x /etc/systemd/system/ak_monitor.service
 
 # 默认值
