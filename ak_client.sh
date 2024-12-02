@@ -45,7 +45,7 @@ install_akile_monitor_client(){
     mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
 
     # 下载并设置ak_client
-    wget -O ak_client https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/client/client && chmod 755 ak_client
+    wget -O client https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/client/client && chmod 777 client
 
     # 下载client.json文件模板
     wget -O client.json https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/client/client.json
@@ -56,13 +56,35 @@ install_akile_monitor_client(){
     sed -i "s/\"net_name\": \"eth0\"/\"net_name\": \"$net_name\"/" client.json
     sed -i "s/\"name\": \"HK-Akile\"/\"name\": \"$name\"/" client.json
 
-    # 下载ak_client.service文件
-    wget -O /etc/systemd/system/ak_client.service https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.service
+    # ak_client.service
+    cat > /etc/systemd/system/ak_client.service <<EOF
+    [Unit]
+    Description=AkileCloud Monitor Service
+    After=network.target nss-lookup.target
+    Wants=network.target
+
+    [Service]
+    User=root
+    Group=root
+    Type=simple
+    LimitAS=infinity
+    LimitRSS=infinity
+    LimitCORE=infinity
+    LimitNOFILE=999999999
+    WorkingDirectory=/etc/ak_monitor/
+    ExecStart=/etc/ak_monitor/client
+    Restart=on-failure
+    RestartSec=10
+
+    [Install]
+    WantedBy=multi-user.target
+
+    EOF
     
     # 启用服务，使其开机自启动
     systemctl daemon-reload
-    systemctl enable ak_client
-    systemctl start ak_client
+    systemctl start ak_client.service
+    systemctl enable ak_client.service
     
     cat /etc/ak_monitor/client.json
 }
