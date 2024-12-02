@@ -15,26 +15,17 @@ default_net_name="eth0"
 default_name="HK-Akile"
 
 configure_akile_monitor_client(){
-    # 检查是否传入了参数，如果有，则使用这些参数
-    if [ $# -ge 2 ]; then
-        auth_secret=$1
-        url=$2
-    else
-        # 如果没有传递参数，则询问用户输入
-        echo -e "${Green}请输入通信密钥 auth_secret ，与主控端设置的通信密钥相同: ${Font}"
-        read auth_secret
-        if [ -z "$auth_secret" ]; then
-            auth_secret=$default_auth_secret
-        fi
 
-        echo -e "${Green}请输入主控端url (例如：http://yourdomain.com:3000) : ${Font}"
-        read url
-        if [ -z "$url" ]; then
-            url=$default_url
-        fi
+    echo -e "${Green}请输入通信密钥 auth_secret ，与主控端设置的通信密钥相同: ${Font}"
+    read auth_secret
+    if [ -z "$auth_secret" ]; then
+        auth_secret=$default_auth_secret
     fi
-
-    # 提示用户输入net_name和name
+    echo -e "${Green}请输入主控端url (例如：http://yourdomain.com:3000) : ${Font}"
+    read url
+    if [ -z "$url" ]; then
+        url=$default_url
+    fi
     echo -e "${Green}请输入监控的网卡名 net_name (例如：eth0，默认值：$default_net_name) ${Red}如果不懂请不要修改此项，直接回车！！！: ${Font}"
     read net_name
     if [ -z "$net_name" ]; then
@@ -61,7 +52,7 @@ install_akile_monitor_client(){
 
     # 修改client.json文件中的内容
     sed -i "s/\"auth_secret\": \"auth_secret\"/\"auth_secret\": \"$auth_secret\"/" client.json
-    sed -i "s/\"url\": \"http:\/\/yourdomain.com:3000\"/\"url\": \"$url\"/" client.json
+    sed -i "s#\"url\": \"http://yourdomain.com:3000\"#\"url\": \"$url\"#" client.json
     sed -i "s/\"net_name\": \"eth0\"/\"net_name\": \"$net_name\"/" client.json
     sed -i "s/\"name\": \"HK-Akile\"/\"name\": \"$name\"/" client.json
 
@@ -71,7 +62,7 @@ install_akile_monitor_client(){
     # 启用服务，使其开机自启动
     systemctl daemon-reload
     systemctl enable ak_client
-    systemctl restart ak_client  
+    systemctl restart ak_client
 }
 
 configure_akile_monitor_client
