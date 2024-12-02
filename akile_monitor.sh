@@ -113,7 +113,7 @@ if [ -z "$server_ip" ]; then
   server_ip="你的服务器IP"
 fi
 
-echo -e "${Green}请输入后端WebSocket地址(格式如 12.13.14.15:3000 ，回车默认使用服务器IP:ws监听端口 ${Font}$server_ip:$listen): "
+echo -e "${Green}请输入后端WebSocket地址(格式如 12.13.14.15:3000 ，回车默认使用 ${Font}服务器IP:ws监听端口 ${Green}$server_ip:$listen): ${Font}"
 read ws_address
 ws_address=${ws_address:-"$server_ip:$listen"}
 
@@ -122,8 +122,7 @@ docker_cmd="docker run -d -p $listen:3000 -p $web_port:80 \
     -e AUTH_SECRET=\"$auth_secret\" \
     -e ENABLE_TG=$enable_tg \
     -e TG_TOKEN=\"$tg_token\" \
-    -e TG_TOKEN=\"$tg_token\" \
-    -e SOCKET=\"$SOCKET\" \
+    -e SOCKET=\"$ws_address\" \
     -v /etc/ak_monitor:/etc/ak_monitor \
     -v /etc/ak_monitor/index:/usr/share/nginx/html \
     my-static-site"
