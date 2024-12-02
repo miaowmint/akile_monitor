@@ -141,7 +141,7 @@ echo -e "${Green}执行命令: $docker_cmd${Font}"
 eval $docker_cmd
 
 # 提示信息
-echo -e "${Green}主控端已启动！web页面访问地址为：${Font} https://$server_ip:$web_port"
+echo -e "${Green}主控端已启动！web页面访问地址为：${Font} http://$server_ip:$web_port"
 echo -e "${Green}请在需要监控的服务器运行以下命令安装 agent：${Font}"
 echo -e "${Red}bash <(curl -sL https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh)${Font}"
 echo -e "${Green}其中通信密钥 auth_secret 为：${Red}$auth_secret${Font}"
