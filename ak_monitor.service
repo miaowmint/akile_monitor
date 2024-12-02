@@ -12,7 +12,7 @@ LimitRSS=infinity
 LimitCORE=infinity
 LimitNOFILE=999999999
 WorkingDirectory=/etc/ak_monitor/
-ExecStart=/etc/ak_monitor/ak_monitor
+ExecStart=/etc/ak_monitor/client
 Restart=on-failure
 RestartSec=10
 
