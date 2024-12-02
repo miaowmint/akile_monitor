@@ -38,7 +38,7 @@
     npm install
     sed -i "s|socket: 'ws://localhost/ws'|socket: 'ws://$SOCKET/ws'|" ./src/config/index.js
     npm run build
-    cp -rf ./dist/* /usr/share/nginx/html/ && cd ../ && rm akile_monitor_fe
+    cp -rf ./dist/* /usr/share/nginx/html/ && cd ../ && rm -rf akile_monitor_fe
 
     # 启动 Nginx
     service nginx start
