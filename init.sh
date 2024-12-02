@@ -10,6 +10,7 @@
     DEFAULT_AUTH_SECRET="auth_secret"
     DEFAULT_ENABLE_TG="false"
     DEFAULT_TG_TOKEN="telegram_bot_token"
+    DEFAULT_ENABLE_WSS="false"
     DEFAULT_SOCKET="localhost"
     CONFIG_FILE="/etc/ak_monitor/config.json"
 
@@ -17,12 +18,14 @@
     AUTH_SECRET="${AUTH_SECRET:-$DEFAULT_AUTH_SECRET}"
     ENABLE_TG="${ENABLE_TG:-$DEFAULT_ENABLE_TG}"
     TG_TOKEN="${TG_TOKEN:-$DEFAULT_TG_TOKEN}"
+    ENABLE_WSS="${ENABLE_WSS:-$DEFAULT_ENABLE_WSS}"
     SOCKET="${SOCKET:-$DEFAULT_SOCKET}"
 
     # 输出读取的环境变量值
     echo "AUTH_SECRET: $AUTH_SECRET"
     echo "ENABLE_TG: $ENABLE_TG"
     echo "TG_TOKEN: $TG_TOKEN"
+    echo "ENABLE_WSS: $ENABLE_WSS"
     echo "SOCKET: $SOCKET"
 
     # 使用 sed 修改 config.json 文件中的值
@@ -36,7 +39,11 @@
     # 构建前端文件
     git clone https://github.com/akile-network/akile_monitor_fe.git && cd akile_monitor_fe
     npm install
-    sed -i "s|socket: 'ws://localhost/ws'|socket: 'ws://$SOCKET/ws'|" ./src/config/index.js
+    if [ "$ENABLE_WSS" = "true" ]; then
+        sed -i "s|socket: 'ws://localhost/ws'|socket: 'wss://$SOCKET/ws'|" ./src/config/index.js
+    else
+        sed -i "s|socket: 'ws://localhost/ws'|socket: 'ws://$SOCKET/ws'|" ./src/config/index.js
+    fi
     npm run build
     cp -rf ./dist/* /usr/share/nginx/html/ && cd ../ && rm -rf akile_monitor_fe
 
