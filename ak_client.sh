@@ -56,30 +56,8 @@ install_akile_monitor_client(){
     sed -i "s/\"net_name\": \"eth0\"/\"net_name\": \"$net_name\"/" client.json
     sed -i "s/\"name\": \"HK-Akile\"/\"name\": \"$name\"/" client.json
 
-    # ak_client.service
-    cat > /etc/systemd/system/ak_client.service <<EOF
-    [Unit]
-    Description=AkileCloud Monitor Service
-    After=network.target nss-lookup.target
-    Wants=network.target
-
-    [Service]
-    User=root
-    Group=root
-    Type=simple
-    LimitAS=infinity
-    LimitRSS=infinity
-    LimitCORE=infinity
-    LimitNOFILE=999999999
-    WorkingDirectory=/etc/ak_monitor/
-    ExecStart=/etc/ak_monitor/client
-    Restart=on-failure
-    RestartSec=10
-
-    [Install]
-    WantedBy=multi-user.target
-
-    EOF
+    # 下载ak_client.service文件
+    wget -O /etc/systemd/system/ak_client.service https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.service
     
     # 启用服务，使其开机自启动
     systemctl daemon-reload
