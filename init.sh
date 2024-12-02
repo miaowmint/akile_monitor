@@ -1,8 +1,15 @@
 #!/bin/bash
 
+# 下载 ak_monitor
+mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
+wget -O config.json https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/config.json
+wget -O ak_monitor https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/ak_monitor && chmod 755 ak_monitor
+wget -O /etc/init.d/ak_monitor https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_monitor.rc && chmod +x /etc/init.d/ak_monitor
+
 # 启动 OpenRC
 openrc
 touch /run/openrc/softlevel
+rc-update add ak_monitor default
 
 # 配置文件路径
 CONFIG_FILE="/etc/ak_monitor/config.json"
