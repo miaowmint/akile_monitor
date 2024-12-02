@@ -34,9 +34,8 @@ cat "$CONFIG_FILE"
 service nginx start
 
 # 启动 ak_monitor 服务
-supervisorctl reread
-supervisorctl update
-supervisorctl restart ak_monitor
+service supervisor start
+supervisorctl start ak_monitor
 supervisorctl status ak_monitor
 
 # 保持容器运行
