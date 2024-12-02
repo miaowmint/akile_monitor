@@ -62,7 +62,7 @@ install_akile_monitor_client(){
     # 启用服务，使其开机自启动
     systemctl daemon-reload
     systemctl enable ak_client
-    systemctl restart ak_client
+    systemctl start ak_client
     
     cat /etc/ak_monitor/client.json
 }
