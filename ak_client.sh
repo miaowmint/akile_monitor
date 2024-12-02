@@ -63,6 +63,8 @@ install_akile_monitor_client(){
     systemctl daemon-reload
     systemctl enable ak_client
     systemctl restart ak_client
+    
+    cat /etc/ak_monitor/client.json
 }
 
 configure_akile_monitor_client
