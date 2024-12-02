@@ -25,15 +25,15 @@ echo "TG_TOKEN: $TG_TOKEN"
 # 使用 sed 修改 config.json 文件中的值
 sed -i "s/\"auth_secret\": \".*\"/\"auth_secret\": \"$AUTH_SECRET\"/" $CONFIG_FILE
 sed -i "s/\"enable_tg\": .* /\"enable_tg\": $ENABLE_TG/" $CONFIG_FILE
-sed -i "s/\"tg_token\": \".*\"/\"tg_token\": \"$TG_TOKEN\"/" $CONFIG_FILE
+sed -i "s/\"tg_token\": \".*\"/\"tg_token\": \"$TG_TOKEN\"/" $CONFIG_FILE  
 
 echo "配置文件已更新："
 cat "$CONFIG_FILE"
 
 # 启动 ak_monitor 服务
-systemctl daemon-reload
-systemctl enable ak_monitor
-systemctl start ak_monitor
+systemctl daemon-reload  
+systemctl enable ak_monitor  
+systemctl restart ak_monitor  
 
 # 启动 Nginx
 service nginx start
