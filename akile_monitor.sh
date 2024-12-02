@@ -75,7 +75,7 @@ generate_random_secret() {
 
 # 获取服务器 IP
 get_server_ip() {
-  wget -qO- https://www.loliapi.com/getip/?type=ip
+  wget -qO- https://4.ipw.cn/
 }
 
 # 询问配置项
@@ -113,12 +113,19 @@ if [ -z "$server_ip" ]; then
   server_ip="你的服务器IP"
 fi
 
+echo -e "${Green}请输入后端WebSocket地址(格式如 12.13.14.15:3000 ，回车默认使用服务器IP:ws监听端口 ${Font}$server_ip:$listen): "
+read ws_address
+ws_address=${ws_address:-"$server_ip:$listen"}
+
 # Docker，启动！
 docker_cmd="docker run -d -p $listen:3000 -p $web_port:80 \
     -e AUTH_SECRET=\"$auth_secret\" \
     -e ENABLE_TG=$enable_tg \
     -e TG_TOKEN=\"$tg_token\" \
+    -e TG_TOKEN=\"$tg_token\" \
+    -e SOCKET=\"$SOCKET\" \
     -v /etc/ak_monitor:/etc/ak_monitor \
+    -v /etc/ak_monitor/index:/usr/share/nginx/html \
     my-static-site"
 
 if command -v docker &> /dev/null; then
@@ -135,7 +142,7 @@ echo -e "${Green}执行命令: $docker_cmd${Font}"
 eval $docker_cmd
 
 # 提示信息
-echo -e "${Green}主控端已启动！web页面访问地址为：${Font} http://$server_ip:$web_port"
+echo -e "${Green}主控端已启动！web页面访问地址为：${Font} https://$server_ip:$web_port"
 echo -e "${Green}请在需要监控的服务器运行以下命令安装 agent：${Font}"
 echo -e "${Red}bash <(curl -sL https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh)${Font}"
 echo -e "${Green}其中通信密钥 auth_secret 为：${Red}$auth_secret${Font}"
