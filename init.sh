@@ -3,8 +3,8 @@
 # 下载 ak_monitor
 mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
 wget -O config.json https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/config.json
-wget -O ak_monitor https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/ak_monitor && chmod 777 ak_monitor      
-wget -O /etc/systemd/system/ak_monitor.service https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_monitor.service && chmod +x /etc/systemd/system/ak_monitor.service
+wget -O ak_monitor https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/ak_monitor && chmod 777 ak_monitor
+wget -O /etc/supervisor/conf.d/ak_monitor.conf https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_monitor.conf
 
 # 默认值
 DEFAULT_AUTH_SECRET="auth_secret"
@@ -25,18 +25,19 @@ echo "TG_TOKEN: $TG_TOKEN"
 # 使用 sed 修改 config.json 文件中的值
 sed -i "s/\"auth_secret\": \".*\"/\"auth_secret\": \"$AUTH_SECRET\"/" $CONFIG_FILE
 sed -i "s/\"enable_tg\": .* /\"enable_tg\": $ENABLE_TG/" $CONFIG_FILE
-sed -i "s/\"tg_token\": \".*\"/\"tg_token\": \"$TG_TOKEN\"/" $CONFIG_FILE  
+sed -i "s/\"tg_token\": \".*\"/\"tg_token\": \"$TG_TOKEN\"/" $CONFIG_FILE
 
 echo "配置文件已更新："
 cat "$CONFIG_FILE"
 
-# 启动 ak_monitor 服务
-systemctl daemon-reload  
-systemctl enable ak_monitor  
-systemctl restart ak_monitor  
-
 # 启动 Nginx
 service nginx start
+
+# 启动 ak_monitor 服务
+supervisorctl reread
+supervisorctl update
+supervisorctl restart ak_monitor
+supervisorctl status ak_monitor
 
 # 保持容器运行
 tail -f /dev/null
