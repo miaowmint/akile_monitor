@@ -78,6 +78,12 @@ get_server_ip() {
   wget -qO- https://4.ipw.cn/
 }
 
+server_ip=$(get_server_ip)
+if [ -z "$server_ip" ]; then
+  echo -e "${Red}无法获取服务器 IP，继续执行脚本...${Font}"
+  server_ip="你的服务器IP"
+fi
+
 # 询问配置项
 echo -e "${Green}请输入通信密钥 auth_secret 并牢记（直接回车将随机生成一个）：${Font}"
 read auth_secret
@@ -106,12 +112,9 @@ else
   tg_token=""
 fi
 
-# 获取服务器的外网 IP 地址
-server_ip=$(get_server_ip)
-if [ -z "$server_ip" ]; then
-  echo -e "${Red}无法获取服务器 IP，继续执行脚本...${Font}"
-  server_ip="你的服务器IP"
-fi
+echo -e "${Green}你的面板前端是否会使用HTTPS访问? (若直接IP:端口访问面板或反代后仍使用http，直接回车默认 false 即可) 输入 true 启用 WSS: ${Font}"
+read enable_wss
+enable_wss=${enable_wss:-"false"}
 
 echo -e "${Green}请输入后端WebSocket地址(格式如 12.13.14.15:3000 ，回车默认使用 ${Font}服务器IP:ws监听端口 ${Green}$server_ip:$listen): ${Font}"
 read ws_address
@@ -127,6 +130,7 @@ docker_cmd="docker run -d -p $listen:3000 -p $web_port:80 \
     -e AUTH_SECRET=\"$auth_secret\" \
     -e ENABLE_TG=$enable_tg \
     -e TG_TOKEN=\"$tg_token\" \
+    -e ENABLE_WSS=$enable_wss \
     -e SOCKET=\"$ws_address\" \
     -v /etc/ak_monitor:/etc/ak_monitor \
     -v /etc/ak_monitor/index:/usr/share/nginx/html \
