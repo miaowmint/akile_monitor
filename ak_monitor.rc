@@ -1,0 +1,12 @@
+#!/sbin/openrc-run
+description="AkileCloud Monitor Service"
+
+command="/etc/ak_monitor/ak_monitor"
+command_user="root"
+pidfile="/run/ak_monitor.pid"
+output_log="/var/log/ak_monitor.log"
+error_log="/var/log/ak_monitor.err"
+
+depend() {
+    need net
+}
