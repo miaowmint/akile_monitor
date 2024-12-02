@@ -7,7 +7,7 @@
 
 Green="\033[32m"
 Font="\033[0m"
-Red="\033[31m"  
+Red="\033[31m"
 
 install_docker(){
     if [[ $(curl -s "https://www.loliapi.com/getip/?type=country") == "CN" ]]; then
@@ -15,7 +15,7 @@ install_docker(){
         sources=(
             "https://mirrors.aliyun.com/docker-ce"
             "https://mirrors.tencent.com/docker-ce"
-            "https://mirrors.163.com/docker-ce"  
+            "https://mirrors.163.com/docker-ce"
             "https://mirrors.cernet.edu.cn/docker-ce"
         )
         get_average_delay() {
@@ -26,7 +26,7 @@ install_docker(){
                 delay=$(curl -o /dev/null -s -w "%{time_total}\n" "$source")
                 total_delay=$(awk "BEGIN {print $total_delay + $delay}")
             done
-            average_delay=$(awk "BEGIN {print $total_delay / $iterations}")  
+            average_delay=$(awk "BEGIN {print $total_delay / $iterations}")
             echo "$average_delay"
         }
         min_delay=${#sources[@]}
@@ -36,7 +36,7 @@ install_docker(){
             if (( $(awk 'BEGIN { print '"$average_delay"' < '"$min_delay"' }') )); then
                 min_delay=$average_delay
                 selected_source=$source
-            fi  
+            fi
         done
         if [ -n "$selected_source" ]; then
             echo -e "${Green}选择延迟最低的源 $selected_source ，延迟为 $min_delay 秒${Font}"
@@ -83,8 +83,8 @@ echo -e "${Green}请输入通信密钥 auth_secret 并牢记（直接回车将�
 read auth_secret
 
 if [ -z "$auth_secret" ]; then
-  auth_secret=$(generate_random_secret)    
-  echo -e "${Green}已随机生成 auth_secret: ${Red}$auth_secret${Font}"            
+  auth_secret=$(generate_random_secret)
+  echo -e "${Green}已随机生成 auth_secret: ${Red}$auth_secret${Font}"
 fi
 
 echo -e "${Green}请输入web网页端口（默认 8080）：${Font}"
@@ -135,10 +135,8 @@ echo -e "${Green}执行命令: $docker_cmd${Font}"
 eval $docker_cmd
 
 # 提示信息
-echo -e "${Green}主控端已启动！web页面访问地址为：${Font} http://$server_ip:$web_port"
+echo -e "${Green}主控端已启动！web页面访问地址为：${Font} https://$server_ip:$web_port"
 echo -e "${Green}请在需要监控的服务器运行以下命令安装 agent：${Font}"
-if [ "$server_ip" != "你的服务器IP" ]; then
-  echo -e "bash <(curl -sL https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh) $auth_secret http://$server_ip:$listen"
-else
-  echo -e "bash <(curl -sL https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh) $auth_secret"
-fi
+echo -e "${Red}bash <(curl -sL https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh)${Font}"
+echo -e "${Green}其中通信密钥 auth_secret 为：${Red}$auth_secret${Font}"
+echo -e "${Green}其中主控端 url 为：${Red}http://$server_ip:$listen${Font}"
