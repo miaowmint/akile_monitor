@@ -4,38 +4,39 @@
 mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
 wget -O config.json https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/config.json
 wget -O ak_monitor https://raw.githubusercontent.com/akile-network/akile_monitor/refs/heads/main/ak_monitor && chmod 755 ak_monitor
-wget -O /etc/init.d/ak_monitor https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_monitor.rc && chmod +x /etc/init.d/ak_monitor
+wget -O /etc/systemd/system/ak_monitor.service https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_monitor.service && chmod +x /etc/systemd/system/ak_monitor.service
 
-# 启动 OpenRC
-openrc
-touch /run/openrc/softlevel
-rc-update add ak_monitor default
-
-# 配置文件路径
+# 默认值
+DEFAULT_AUTH_SECRET="auth_secret"
+DEFAULT_ENABLE_TG="false"
+DEFAULT_TG_TOKEN="telegram_bot_token"
 CONFIG_FILE="/etc/ak_monitor/config.json"
 
-# 读取环境变量并更新配置
-AUTH_SECRET=${AUTH_SECRET:-"default_auth_secret"}
-ENABLE_TG=${ENABLE_TG:-false}
-TG_TOKEN=${TG_TOKEN:-"default_telegram_bot_token"}
+# 读取环境变量，如果没有设置，使用默认值
+AUTH_SECRET="${AUTH_SECRET:-$DEFAULT_AUTH_SECRET}"
+ENABLE_TG="${ENABLE_TG:-$DEFAULT_ENABLE_TG}"
+TG_TOKEN="${TG_TOKEN:-$DEFAULT_TG_TOKEN}"
 
-# 更新配置文件中的字段
-if [ -f "$CONFIG_FILE" ]; then
-    jq --arg auth_secret "$AUTH_SECRET" \
-       --argjson enable_tg "$ENABLE_TG" \
-       --arg tg_token "$TG_TOKEN" \
-       '.auth_secret = $auth_secret | .enable_tg = $enable_tg | .tg_token = $tg_token' \
-       "$CONFIG_FILE" > "${CONFIG_FILE}.tmp" && mv "${CONFIG_FILE}.tmp" "$CONFIG_FILE"
-else
-    echo "配置文件不存在：$CONFIG_FILE"
-    exit 1
-fi
+# 输出读取的环境变量值
+echo "AUTH_SECRET: $AUTH_SECRET"
+echo "ENABLE_TG: $ENABLE_TG"
+echo "TG_TOKEN: $TG_TOKEN"
+
+# 使用 sed 修改 config.json 文件中的值
+sed -i "s/\"auth_secret\": \".*\"/\"auth_secret\": \"$AUTH_SECRET\"/" $CONFIG_FILE
+sed -i "s/\"enable_tg\": .* /\"enable_tg\": $ENABLE_TG/" $CONFIG_FILE
+sed -i "s/\"tg_token\": \".*\"/\"tg_token\": \"$TG_TOKEN\"/" $CONFIG_FILE
 
 echo "配置文件已更新："
 cat "$CONFIG_FILE"
 
 # 启动 ak_monitor 服务
-rc-service ak_monitor start
+systemctl daemon-reload
+systemctl enable ak_monitor
+systemctl start ak_monitor
 
 # 启动 Nginx
-nginx -g "daemon off;"
+service nginx start
+
+# 保持容器运行
+tail -f /dev/null
