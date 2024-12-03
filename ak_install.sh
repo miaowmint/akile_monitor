@@ -124,6 +124,7 @@ uninstall_akile_monitor(){
     rm /etc/systemd/system/ak_monitor.service
     systemctl daemon-reload
     rm -f /etc/ak_monitor/ak_monitor
+    rm -f /etc/ak_monitor/ak_monitor.db
     rm -f /etc/ak_monitor/config.json
     echo -e "${Green}卸载完毕${Font}"
     sed -i "s|^shconfig_akile_monitor=\"[^\"]*\"|shconfig_akile_monitor=\"false\"|" $config_file
