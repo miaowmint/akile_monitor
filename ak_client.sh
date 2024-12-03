@@ -9,6 +9,18 @@ Green="\033[32m"
 Font="\033[0m"
 Red="\033[31m"
 
+check_source_config_file(){
+    mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
+
+    config_file="/etc/ak_monitor/shconfig.sh"
+
+    if [ ! -f "$config_file" ]; then
+        echo "$config_file 不存在，正在下载..."
+        download_url="https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/shconfig.sh"
+        wget -O "$config_file" "$download_url"
+    fi
+}
+
 select_download_file(){
     os=$(uname -s)
     arch=$(uname -m)
@@ -39,7 +51,7 @@ select_download_file(){
 
 configure_akile_monitor_client(){
     default_auth_secret="default_auth_secret"
-    default_url="http://12.13.14.15:3000"
+    default_url="12.13.14.15:3000"
     default_uri="/monitor"
     default_name="HK-Akile"
     default_net_name=$(ip link show | awk '/^[0-9]+: / {print $2}' | sed 's/:$//' | grep -v 'lo' | head -n 1)
@@ -49,26 +61,36 @@ configure_akile_monitor_client(){
     if [ -z "$auth_secret" ]; then
         auth_secret=$default_auth_secret
     fi
-    echo -e "${Green}请输入主控端通信url (例如：http://12.13.14.15:3000) : ${Font}"
+    sed -i "s|^shconfig_auth_secret1=\"[^\"]*\"|shconfig_auth_secret1=\"$auth_secret\"|" $config_file
+
+    echo -e "${Green}请输入主控端通信url (不要带http://，例如：12.13.14.15:3000) : ${Font}"
     read url
     if [ -z "$url" ]; then
         url=$default_url
     fi
+    sed -i "s|^shconfig_url=\"[^\"]*\"|shconfig_url=\"$url\"|" $config_file
+
     echo -e "${Green}请输入主控端通信uri (例如：/monitor，注意带 / ，默认为/monitor) : ${Font}"
     read uri
     if [ -z "$uri" ]; then
         uri=$default_uri
     fi
+    sed -i "s|^shconfig_uri=\"[^\"]*\"|shconfig_uri=\"$uri\"|" $config_file
+
     echo -e "${Green}请输入节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile) : ${Font}"
     read name
     if [ -z "$name" ]; then
         name=$default_name
     fi
+    sed -i "s|^shconfig_name=\"[^\"]*\"|shconfig_name=\"$name\"|" $config_file
+
     echo -e "${Green}请输入监控的网卡名 net_name (例如：eth0，已自动获取到的默认值：$default_net_name) ${Red}如果不懂请不要修改此项，直接回车！！！: ${Font}"
     read net_name
     if [ -z "$net_name" ]; then
         net_name=$default_net_name
     fi
+    sed -i "s|^shconfig_net_name=\"[^\"]*\"|shconfig_net_name=\"$auth_secret\"|" $config_file
+    
     install_akile_monitor_client
 }
 # 安装akile_monitor
@@ -124,6 +146,8 @@ EOF
     systemctl start ak_client
     systemctl enable ak_client
 }
+
+check_source_config_file
 
 if [ $# -eq 4 ]; then
     auth_secret=$1
