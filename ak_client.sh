@@ -90,7 +90,7 @@ configure_akile_monitor_client(){
         net_name=$default_net_name
     fi
     sed -i "s|^shconfig_net_name=\"[^\"]*\"|shconfig_net_name=\"$auth_secret\"|" $config_file
-    
+
     install_akile_monitor_client
 }
 # 安装akile_monitor
@@ -155,7 +155,15 @@ if [ $# -eq 4 ]; then
     uri=$3
     name=$4
     net_name=$(ip link show | awk '/^[0-9]+: / {print $2}' | sed 's/:$//' | grep -v 'lo' | head -n 1)
+
+    sed -i "s|^shconfig_auth_secret1=\"[^\"]*\"|shconfig_auth_secret1=\"$auth_secret\"|" $config_file
+    sed -i "s|^shconfig_url=\"[^\"]*\"|shconfig_url=\"$url\"|" $config_file
+    sed -i "s|^shconfig_uri=\"[^\"]*\"|shconfig_uri=\"$uri\"|" $config_file
+    sed -i "s|^shconfig_name=\"[^\"]*\"|shconfig_name=\"$name\"|" $config_file
+    sed -i "s|^shconfig_net_name=\"[^\"]*\"|shconfig_net_name=\"$auth_secret\"|" $config_file
+
     install_akile_monitor_client
+
 elif [ $# -lt 4 ]; then
     echo -e "${Red}错误: 脚本需要传递四个参数或不传参数${Font}"
     echo -e "${Red}第四个参数应为节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile) ${Font}"
@@ -163,3 +171,5 @@ elif [ $# -lt 4 ]; then
 else
     configure_akile_monitor_client
 fi
+
+sed -i "s|^shconfig_ak_client=\"[^\"]*\"|shconfig_ak_client=\"true\"|" $config_file
