@@ -156,3 +156,5 @@ main(){
 source_config_file
 
 main
+
+sed -i "s|^shconfig_akile_monitor_fe=\"[^\"]*\"|shconfig_akile_monitor_fe=\"true\"|" $config_file
