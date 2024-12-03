@@ -150,8 +150,9 @@ uninstall_ak_client(){
 
 bind_AkileMonitorBot(){
     if [ "$shconfig_akile_monitor" = "true" ]; then
+        get_server_ip
         echo -e "${Green}复制以下命令，发送给TG上的 @AkileMonitorBot https://t.me/AkileMonitorBot${Font}"  
-        echo -e "${Red}/bind http://$server_ip:$listen$shconfig_hook_uri $shconfig_hook_token${Font}"
+        echo -e "${Red}/bind http://$server_ip:$shconfig_listen$shconfig_hook_uri $shconfig_hook_token${Font}"
     else
         echo -e "${Red}尚未安装 akile_monitor 主控后端，请先安装${Font}"
         exit 1
@@ -184,7 +185,7 @@ else
     echo -e "${Green}10、卸载ak_client监控端${Font}"
     echo -e "${Green}11、生成 @AkileMonitorBot 绑定命令${Font}"
     echo -e "———————————————————————————————————————"
-    read -p "请输入数字 [0-10]: " choice
+    read -p "请输入数字 [0-11]: " choice
 fi
 
 if [ "$choice" == "0" ]; then
@@ -214,7 +215,7 @@ elif [ "$choice" == "11" ]; then
     bind_AkileMonitorBot
 else
     clear
-    echo -e "${Green}请输入正确的数字 [0-10]${Font}"
+    echo -e "${Green}请输入正确的数字 [0-11]${Font}"
     sleep 1s
     curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_install.sh && chmod +x ak_install.sh && bash ak_install.sh
 fi
