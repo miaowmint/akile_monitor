@@ -98,9 +98,9 @@ akile_monitor_fe_config(){
             ws_is="ws://"
         fi
         echo "{
-            \"socket\": \"$ws_is$shconfig_ws_address$shconfig_web_uri1\",
-            \"apiURL\": \"$shconfig_weburl\"
-        }"
+\"socket\": \"$ws_is$shconfig_ws_address$shconfig_web_uri1\",
+\"apiURL\": \"$shconfig_weburl\"
+}"
     else
         echo -e "${Red}尚未安装 akile_monitor_fe 主控前端，请先安装${Font}"
         exit 1
