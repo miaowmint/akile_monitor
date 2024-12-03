@@ -123,8 +123,6 @@ EOF
     systemctl daemon-reload
     systemctl start ak_client
     systemctl enable ak_client
-    
-    cat /etc/ak_monitor/client.json
 }
 
 if [ $# -eq 4 ]; then
