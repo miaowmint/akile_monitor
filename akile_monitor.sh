@@ -120,6 +120,13 @@ echo -e "${Green}请输入后端WebSocket地址(格式如 12.13.14.15:3000 ，�
 read ws_address
 ws_address=${ws_address:-"$server_ip:$listen"}
 
+if command -v docker &> /dev/null; then
+    echo "Docker 已安装，继续执行脚本..."
+else
+    echo "Docker 未安装，安装 Docker"
+    install_docker
+fi
+
 #构建docker镜像
 mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
 wget -O Dockerfile https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/Dockerfile
@@ -135,13 +142,6 @@ docker_cmd="docker run -d -p $listen:3000 -p $web_port:80 \
     -v /etc/ak_monitor:/etc/ak_monitor \
     -v /etc/ak_monitor/index:/usr/share/nginx/html \
     akile_monitor"
-
-if command -v docker &> /dev/null; then
-    echo "Docker 已安装，继续执行脚本..."
-else
-    echo "Docker 未安装，安装 Docker"
-    install_docker
-fi
 
 echo -e "${Green}正在启动 Docker 容器...${Font}"
 echo -e "${Green}执行命令: $docker_cmd${Font}"
