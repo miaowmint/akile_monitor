@@ -64,23 +64,40 @@ fast_install_ak_client(){
 }
 
 akile_monitor_config(){
-    cat /etc/ak_monitor/config.json
+    if [ "$shconfig_akile_monitor" = "true" ]; then
+        cat /etc/ak_monitor/config.json
+    else
+        echo -e "${Red}尚未安装 akile_monitor 主控后端，请先安装${Font}"
+        exit 1
+    fi
 }
 
 akile_monitor_fe_config(){
-    if [ "$shconfig_enable_wss" = "true" ]; then
-        ws_is="wss://"
+    if [ "$shconfig_akile_monitor_fe" = "true" ]; then
+        if [ "$shconfig_enable_wss" = "true" ]; then
+            ws_is="wss://"
+        else
+            ws_is="ws://"
+        fi
+        echo "{
+            \"socket\": \"$ws_is$shconfig_ws_address$shconfig_web_uri1\",
+            \"apiURL\": \"$shconfig_weburl\"
+        }"
     else
-        ws_is="ws://"
+        echo -e "${Red}尚未安装 akile_monitor_fe 主控前端，请先安装${Font}"
+        exit 1
     fi
-    echo "{
-        \"socket\": \"$ws_is$shconfig_ws_address$shconfig_web_uri1\",
-        \"apiURL\": \"$shconfig_weburl\"
-    }"
+    
 }
 
 ak_client_config(){
-    cat /etc/ak_monitor/client.json
+    if [ "$shconfig_ak_client" = "true" ]; then
+        cat /etc/ak_monitor/client.json
+    else
+        echo -e "${Red}尚未安装 ak_client 监控端，请先安装${Font}"
+        exit 1
+    fi
+    
 }
 
 uninstall_akile_monitor(){
