@@ -162,3 +162,5 @@ EOF
 check_source_config_file
 
 configure_akile_monitor
+
+sed -i "s|^shconfig_akile_monitor=\"[^\"]*\"|shconfig_akile_monitor=\"true\"|" $config_file
