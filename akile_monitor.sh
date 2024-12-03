@@ -9,6 +9,18 @@ Green="\033[32m"
 Font="\033[0m"
 Red="\033[31m"
 
+check_source_config_file(){
+    mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
+
+    config_file="/etc/ak_monitor/shconfig.sh"
+
+    if [ ! -f "$config_file" ]; then
+        echo "$config_file 不存在，正在下载..."
+        download_url="https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/shconfig.sh"
+        wget -O "$config_file" "$download_url"
+    fi
+}
+
 select_download_file(){
     os=$(uname -s)
     arch=$(uname -m)
@@ -48,15 +60,18 @@ configure_akile_monitor(){
     if [ -z "$auth_secret" ]; then
     auth_secret=$(generate_random_secret)
     echo -e "${Green}已随机生成 auth_secret: ${Red}$auth_secret${Font}"
+    sed -i "s|^shconfig_auth_secret=\"[^\"]*\"|shconfig_auth_secret=\"$auth_secret\"|" $config_file
     fi
 
     echo -e "${Green}请输入ws监听端口（默认 :3000）：${Font}"
     read listen
     listen=${listen:-"3000"}
+    sed -i "s|^shconfig_listen=\"[^\"]*\"|shconfig_listen=\"$listen\"|" $config_file
 
     echo -e "${Green}是否启用 Telegram 通知（默认 false，输入 true 启用）: ${Font}"
     read enable_tg
     enable_tg=${enable_tg:-"false"}
+    sed -i "s|^shconfig_enable_tg=\"[^\"]*\"|shconfig_enable_tg=\"$enable_tg\"|" $config_file
 
     if [ "$enable_tg" == "true" ]; then
     echo -e "${Green}请输入你的 telegram_bot_token : ${Font}"
@@ -64,22 +79,27 @@ configure_akile_monitor(){
     else
     tg_token="your_telegram_bot_token"
     fi
+    sed -i "s|^shconfig_tg_token=\"[^\"]*\"|shconfig_tg_token=\"$tg_token\"|" $config_file
 
     echo -e "${Green}请输入 update_uri （监控端与主控端通信用的uri，默认 /monitor）：${Font}"
     read update_uri
     update_uri=${update_uri:-"/monitor"}
+    sed -i "s|^shconfig_update_uri=\"[^\"]*\"|shconfig_update_uri=\"$update_uri\"|" $config_file
 
     echo -e "${Green}请输入 web_uri （你查看网页面板的时候与主控端通信用的uri，默认 /ws）：${Font}"
     read web_uri
     web_uri=${web_uri:-"/ws"}
+    sed -i "s|^shconfig_web_uri=\"[^\"]*\"|shconfig_web_uri=\"$web_uri\"|" $config_file
 
     echo -e "${Green}请输入 hook_uri （AkileMonitorBot与主控端通信用的uri，默认 /hook）：${Font}"
     read hook_uri
     hook_uri=${hook_uri:-"/hook"}
+    sed -i "s|^shconfig_hook_uri=\"[^\"]*\"|shconfig_hook_uri=\"$hook_uri\"|" $config_file
 
     echo -e "${Green}请输入 hook_token （hook通信使用的token，默认 hook_token）：${Font}"
     read hook_token
     hook_token=${hook_token:-"hook_token"}
+    sed -i "s|^shconfig_hook_token=\"[^\"]*\"|shconfig_hook_token=\"$hook_token\"|" $config_file
 
     install_akile_monitor
 }
@@ -138,5 +158,7 @@ EOF
     systemctl start ak_monitor
     systemctl enable ak_monitor
 }
+
+check_source_config_file
 
 configure_akile_monitor
