@@ -37,25 +37,43 @@ get_server_ip(){
 }
 
 install_akile_monitor(){
-    curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/akile_monitor.sh && chmod +x akile_monitor.sh && bash akile_monitor.sh
-    get_server_ip
-    echo -e "${Green}主控后端已启动！\n通信密钥auth_secret为：${Red}$shconfig_auth_secret${Green}\n主控端通信url为：${Red}$server_ip:$shconfig_listen${Font}"
+    if [ "$shconfig_akile_monitor" = "true" ]; then
+        echo -e "${Red}已安装 akile_monitor 主控后端，请勿重复安装${Font}"
+        exit 1
+    else
+        curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/akile_monitor.sh && chmod +x akile_monitor.sh && bash akile_monitor.sh
+        get_server_ip
+        source "$config_file"
+        echo -e "${Green}主控后端已启动！\n通信密钥auth_secret为：${Red}$shconfig_auth_secret${Green}\n主控端通信url为：${Red}$server_ip:$shconfig_listen${Font}"
+    fi
 }
 
 install_akile_monitor_fe(){
-    curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/akile_monitor_fe.sh && chmod +x akile_monitor_fe.sh && bash akile_monitor_fe.sh
-    echo -e "${Green}主控前端已启动！web页面访问地址为：${Font} $shconfig_weburl ${Green}如需自定义前端页面请前往 ${Red}/etc/ak_monitor/index ${Green}目录${Font}"
+    if [ "$shconfig_akile_monitor_fe" = "true" ]; then
+        echo -e "${Red}已安装 akile_monitor_fe 主控前端，请勿重复安装${Font}"
+        exit 1
+    else
+        curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/akile_monitor_fe.sh && chmod +x akile_monitor_fe.sh && bash akile_monitor_fe.sh
+        source "$config_file"
+        echo -e "${Green}主控前端已启动！web页面访问地址为：${Font} $shconfig_weburl ${Green}如需自定义前端页面请前往 ${Red}/etc/ak_monitor/index ${Green}目录${Font}"
+    fi
 }
 
 install_ak_client(){
-    curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh && chmod +x ak_client.sh && bash ak_client.sh
-    curl https://www.loliapi.com/getip/
-    echo -e "${Green}监控端已启动！\n节点名称为：${Red}$shconfig_name${Green}\n监控的网卡为：${Red}$shconfig_net_name${Font}"
+    if [ "$shconfig_ak_client" = "true" ]; then
+        echo -e "${Red}已安装 ak_client 监控端，请勿重复安装${Font}"
+        exit 1
+    else
+        curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh && chmod +x ak_client.sh && bash ak_client.sh
+        source "$config_file"
+        echo -e "${Green}监控端已启动！\n节点名称为：${Red}$shconfig_name${Green}\n监控的网卡为：${Red}$shconfig_net_name${Font}"
+    fi
 }
 
 fast_install_ak_client(){
     if [ "$shconfig_akile_monitor" = "true" ]; then
-        echo -e "${Green}复制以下命令，并在后面添加第四个参数：节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile)，然后在需要安装ak_client的机器上运行\n${Font}"
+        get_server_ip
+        echo -e "${Green}复制以下命令，并在后面添加第四个参数：节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile)，然后在需要安装ak_client的机器上运行\n${Font}"  
         echo -e "${Red}curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh && chmod +x ak_client.sh && bash ak_client.sh $shconfig_auth_secret $server_ip:$shconfig_listen $shconfig_update_uri ${Font}"
     else
         echo -e "${Red}尚未安装 akile_monitor 主控后端，请先安装${Font}"
