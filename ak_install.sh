@@ -126,12 +126,14 @@ uninstall_akile_monitor(){
     rm -f /etc/ak_monitor/ak_monitor
     rm -f /etc/ak_monitor/config.json
     echo -e "${Green}卸载完毕${Font}"
+    sed -i "s|^shconfig_akile_monitor=\"[^\"]*\"|shconfig_akile_monitor=\"false\"|" $config_file
 }
 
 uninstall_akile_monitor_fe(){
     docker stop akile_monitor_fe && docker rm akile_monitor_fe && docker rmi akile_monitor_fe
     rm -rf /etc/ak_monitor/index
     echo -e "${Green}卸载完毕${Font}"
+    sed -i "s|^shconfig_akile_monitor_fe=\"[^\"]*\"|shconfig_akile_monitor_fe=\"false\"|" $config_file
 }
 
 uninstall_ak_client(){
@@ -142,6 +144,7 @@ uninstall_ak_client(){
     rm -f /etc/ak_monitor/client
     rm -f /etc/ak_monitor/client.json
     echo -e "${Green}卸载完毕${Font}"
+    sed -i "s|^shconfig_ak_client=\"[^\"]*\"|shconfig_ak_client=\"false\"|" $config_file
 }
 
 clear
