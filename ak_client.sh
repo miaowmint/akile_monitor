@@ -82,12 +82,14 @@ install_akile_monitor_client(){
 
     # client.json
     cat > /etc/ak_monitor/client.json << EOF
+
 {
- "auth_secret": "${auth_secret}",
- "url": "ws://${url}${uri}",
- "net_name": "${net_name}",
- "name": "${name}"
+  "auth_secret": "${auth_secret}",
+  "url": "ws://${url}${uri}",
+  "net_name": "${net_name}",
+  "name": "${name}"
 }
+
 EOF
 
     cat /etc/ak_monitor/client.json
@@ -126,15 +128,12 @@ EOF
 }
 
 if [ $# -eq 4 ]; then
-    # 如果传递了四个参数，分别赋值给auth_secret, url, uri, name
     auth_secret=$1
     url=$2
     uri=$3
     name=$4
-    echo "auth_secret: $auth_secret"
-    echo "url: $url"
-    echo "uri: $uri"
-    echo "name: $name"
+    net_name=$(ip link show | awk '/^[0-9]+: / {print $2}' | sed 's/:$//' | grep -v 'lo' | head -n 1)
+    install_akile_monitor_client
 elif [ $# -lt 4 ]; then
     echo -e "${Red}错误: 脚本需要传递四个参数或不传参数${Font}"
     echo -e "${Red}第四个参数应为节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile) ${Font}"
