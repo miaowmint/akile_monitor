@@ -15,18 +15,18 @@ select_download_file(){
     
     if [[ "$os" == "Linux" ]]; then
         if [[ "$arch" == "x86_64" ]]; then
-            file="akile_monitor-linux-amd64"
+            file="akile_client-linux-amd64"
         elif [[ "$arch" == "aarch64" ]]; then
-            file="akile_monitor-linux-arm64"
+            file="akile_client-linux-arm64"
         else
             echo -e "${Red}似乎是不支持的架构: $arch on $os ${Font}"
             exit 1
         fi
     elif [[ "$os" == "Darwin" ]]; then
         if [[ "$arch" == "x86_64" ]]; then
-            file="akile_monitor-darwin-amd64"
+            file="akile_client-darwin-amd64"
         elif [[ "$arch" == "aarch64" ]]; then
-            file="akile_monitor-darwin-arm64"
+            file="akile_client-darwin-arm64"
         else
             echo -e "${Red}似乎是不支持的架构: $arch on $os ${Font}"
             exit 1
