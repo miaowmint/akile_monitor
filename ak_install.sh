@@ -92,15 +92,7 @@ akile_monitor_config(){
 
 akile_monitor_fe_config(){
     if [ "$shconfig_akile_monitor_fe" = "true" ]; then
-        if [ "$shconfig_enable_wss" = "true" ]; then
-            ws_is="wss://"
-        else
-            ws_is="ws://"
-        fi
-        echo "{
-\"socket\": \"$ws_is$shconfig_ws_address$shconfig_web_uri1\",
-\"apiURL\": \"$shconfig_weburl\"
-}"
+        cat /etc/ak_monitor/index/config.json
     else
         echo -e "${Red}尚未安装 akile_monitor_fe 主控前端，请先安装${Font}"
         exit 1
