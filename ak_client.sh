@@ -163,11 +163,6 @@ if [ $# -eq 4 ]; then
     sed -i "s|^shconfig_net_name=\"[^\"]*\"|shconfig_net_name=\"$auth_secret\"|" $config_file
 
     install_akile_monitor_client
-
-elif [ $# -lt 4 ]; then
-    echo -e "${Red}错误: 脚本需要传递四个参数或不传参数${Font}"
-    echo -e "${Red}第四个参数应为节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile) ${Font}"
-    exit 1
 else
     configure_akile_monitor_client
 fi
