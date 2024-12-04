@@ -163,6 +163,9 @@ if [ $# -eq 4 ]; then
     sed -i "s|^shconfig_net_name=\"[^\"]*\"|shconfig_net_name=\"$auth_secret\"|" $config_file
 
     install_akile_monitor_client
+elif [ $# -lt 4 ]; then
+    echo -e "${Red}似乎没有成功传递正确数量的参数 开始正常的配置流程${Font}"
+    configure_akile_monitor_client
 else
     configure_akile_monitor_client
 fi
