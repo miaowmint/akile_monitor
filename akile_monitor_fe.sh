@@ -116,6 +116,12 @@ main(){
     ws_address=${ws_address:-"$server_ip:$listen"}
     sed -i "s|^shconfig_ws_address=\"[^\"]*\"|shconfig_ws_address=\"$ws_address\"|" $config_file
 
+    if [ "$enable_wss" == "true" ]; then
+        apiurl="https://$ws_address"
+    else
+        apiurl="http://$ws_address"
+    fi
+
     echo -e "${Green}请输入安装主控后端时配置的 web_uri （默认 /ws）：${Font}"
     read web_uri
     web_uri=${web_uri:-"/ws"}
@@ -139,7 +145,7 @@ main(){
         --name akile_monitor_fe \
         --restart unless-stopped \
         -p $web_port:80 \
-        -e API_URL=\"$weburl\" \
+        -e API_URL=\"$apiurl\" \
         -e ENABLE_WSS=$enable_wss \
         -e SOCKET=\"$ws_address\" \
         -e WEB_URI=$web_uri \
