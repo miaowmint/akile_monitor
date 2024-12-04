@@ -136,6 +136,11 @@ uninstall_akile_monitor_fe(){
     rm -rf /etc/ak_monitor/index
     echo -e "${Green}卸载完毕${Font}"
     sed -i "s|^shconfig_akile_monitor_fe=\"[^\"]*\"|shconfig_akile_monitor_fe=\"false\"|" $config_file
+    sed -i "s|^shconfig_web_port=\"[^\"]*\"|shconfig_web_port=\"$web_port\"|" $config_file
+    sed -i "s|^shconfig_enable_wss=\"[^\"]*\"|shconfig_enable_wss=\"$enable_wss\"|" $config_file
+    sed -i "s|^shconfig_weburl=\"[^\"]*\"|shconfig_weburl=\"$weburl\"|" $config_file
+    sed -i "s|^shconfig_ws_address=\"[^\"]*\"|shconfig_ws_address=\"$ws_address\"|" $config_file
+    sed -i "s|^shconfig_web_uri1=\"[^\"]*\"|shconfig_web_uri1=\"$web_uri\"|" $config_file
 }
 
 uninstall_ak_client(){
@@ -147,6 +152,11 @@ uninstall_ak_client(){
     rm -f /etc/ak_monitor/client.json
     echo -e "${Green}卸载完毕${Font}"
     sed -i "s|^shconfig_ak_client=\"[^\"]*\"|shconfig_ak_client=\"false\"|" $config_file
+    sed -i "s|^shconfig_auth_secret1=\"[^\"]*\"|shconfig_auth_secret1=\"$auth_secret\"|" $config_file
+    sed -i "s|^shconfig_url=\"[^\"]*\"|shconfig_url=\"$url\"|" $config_file
+    sed -i "s|^shconfig_uri=\"[^\"]*\"|shconfig_uri=\"$uri\"|" $config_file
+    sed -i "s|^shconfig_name=\"[^\"]*\"|shconfig_name=\"$name\"|" $config_file
+    sed -i "s|^shconfig_net_name=\"[^\"]*\"|shconfig_net_name=\"$auth_secret\"|" $config_file
 }
 
 bind_AkileMonitorBot(){
