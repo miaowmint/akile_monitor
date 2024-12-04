@@ -73,8 +73,9 @@ install_ak_client(){
 fast_install_ak_client(){
     if [ "$shconfig_akile_monitor" = "true" ]; then
         get_server_ip
-        echo -e "${Green}复制以下命令，并在后面添加第四个参数：节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile)，然后在需要安装ak_client的机器上运行\n${Font}"  
-        echo -e "${Red}curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh && chmod +x ak_client.sh && bash ak_client.sh $shconfig_auth_secret $server_ip:$shconfig_listen $shconfig_update_uri ${Font}"
+        echo -e "${Green}复制以下命令中的一个，并在后面添加第四个参数：节点名称 (建议使用 国家缩写-节点名称 例如：HK-Akile)，然后在需要安装ak_client的机器上运行\n${Font}" 
+        echo -e "${Red}curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh && chmod +x ak_client.sh && bash ak_client.sh $shconfig_auth_secret $server_ip:$shconfig_listen $shconfig_update_uri \n${Font}"
+        echo -e "${Red}curl -sSL -O https://raw.githubusercontent.com/miaowmint/akile_monitor/refs/heads/main/ak_client.sh && chmod +x ak_client.sh && bash ak_client.sh $shconfig_auth_secret $shconfig_ws_address $shconfig_update_uri \n${Font}"
     else
         echo -e "${Red}尚未安装 akile_monitor 主控后端，请先安装${Font}"
         exit 1
@@ -120,6 +121,14 @@ uninstall_akile_monitor(){
     rm -f /etc/ak_monitor/config.json
     echo -e "${Green}卸载完毕${Font}"
     sed -i "s|^shconfig_akile_monitor=\"[^\"]*\"|shconfig_akile_monitor=\"false\"|" $config_file
+    sed -i "s|^shconfig_auth_secret=\"[^\"]*\"|shconfig_auth_secret=\"\"|" $config_file
+    sed -i "s|^shconfig_listen=\"[^\"]*\"|shconfig_listen=\"\"|" $config_file
+    sed -i "s|^shconfig_enable_tg=\"[^\"]*\"|shconfig_enable_tg=\"\"|" $config_file
+    sed -i "s|^shconfig_tg_token=\"[^\"]*\"|shconfig_tg_token=\"\"|" $config_file
+    sed -i "s|^shconfig_update_uri=\"[^\"]*\"|shconfig_update_uri=\"\"|" $config_file
+    sed -i "s|^shconfig_web_uri=\"[^\"]*\"|shconfig_web_uri=\"\"|" $config_file
+    sed -i "s|^shconfig_hook_uri=\"[^\"]*\"|shconfig_hook_uri=\"\"|" $config_file
+    sed -i "s|^shconfig_hook_token=\"[^\"]*\"|shconfig_hook_token=\"\"|" $config_file
 }
 
 uninstall_akile_monitor_fe(){
