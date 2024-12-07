@@ -1,7 +1,7 @@
 #!/bin/bash
 
 mkdir -p /usr/share/nginx/html
-wget -O /tmp/akile_monitor_fe.zip https://github.com/akile-network/akile_monitor_fe/releases/download/v0.0.2/akile_monitor_fe.zip      
+wget -O /tmp/akile_monitor_fe.zip https://github.com/akile-network/akile_monitor_fe/releases/latest/download/akile_monitor_fe.zip
 unzip -o /tmp/akile_monitor_fe.zip -d /usr/share/nginx/html
 rm /tmp/akile_monitor_fe.zip
 cd /usr/share/nginx/html
