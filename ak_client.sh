@@ -100,7 +100,7 @@ install_akile_monitor_client(){
     # 下载ak_client
     mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
     echo -e "${Green}开始下载 $file${Font}"
-    wget -O client https://github.com/akile-network/akile_monitor/releases/download/v0.01/$file && chmod 777 client
+    wget -O client https://github.com/akile-network/akile_monitor/releases/latest/download/$file && chmod 777 client
 
     # client.json
     cat > /etc/ak_monitor/client.json << EOF
