@@ -110,7 +110,7 @@ install_akile_monitor(){
     # 下载ak_monitor
     mkdir -p /etc/ak_monitor/ && cd /etc/ak_monitor/
     echo -e "${Green}开始下载 $file${Font}"
-    wget -O ak_monitor https://github.com/akile-network/akile_monitor/releases/download/v0.01/$file && chmod 777 ak_monitor
+    wget -O ak_monitor https://github.com/akile-network/akile_monitor/releases/latest/download/$file && chmod 777 ak_monitor
 
     # config.json
     cat > /etc/ak_monitor/config.json << EOF
