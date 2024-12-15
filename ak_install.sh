@@ -129,6 +129,7 @@ uninstall_akile_monitor(){
     sed -i "s|^shconfig_web_uri=\"[^\"]*\"|shconfig_web_uri=\"\"|" $config_file
     sed -i "s|^shconfig_hook_uri=\"[^\"]*\"|shconfig_hook_uri=\"\"|" $config_file
     sed -i "s|^shconfig_hook_token=\"[^\"]*\"|shconfig_hook_token=\"\"|" $config_file
+    sed -i "s|^shconfig_tg_chat_id=\"[^\"]*\"|shconfig_tg_chat_id=\"\"|" $config_file
 }
 
 uninstall_akile_monitor_fe(){
