@@ -78,8 +78,13 @@ configure_akile_monitor(){
     read tg_token
     else
     tg_token="your_telegram_bot_token"
+    echo -e "${Green}请输入你的 telegram_chat_id : ${Font}"
+    read tg_chat_id
+    else
+    tg_chat_id="your_tg_chat_id"
     fi
     sed -i "s|^shconfig_tg_token=\"[^\"]*\"|shconfig_tg_token=\"$tg_token\"|" $config_file
+    sed -i "s|^shconfig_tg_chat_id=\"[^\"]*\"|shconfig_tg_chat_id=\"$tg_chat_id\"|" $config_file
 
     echo -e "${Green}请输入 update_uri （监控端与主控端通信用的uri，默认 /monitor）：${Font}"
     read update_uri
@@ -122,7 +127,8 @@ install_akile_monitor(){
   "hook_uri": "${hook_uri}",
   "update_uri": "${update_uri}",
   "web_uri": "${web_uri}",
-  "hook_token": "${hook_token}"
+  "hook_token": "${hook_token}",
+  "tg_chat_id": ${tg_chat_id}
 }
 EOF
 
