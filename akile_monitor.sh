@@ -76,11 +76,10 @@ configure_akile_monitor(){
     if [ "$enable_tg" == "true" ]; then
     echo -e "${Green}请输入你的 telegram_bot_token : ${Font}"
     read tg_token
-    else
-    tg_token="your_telegram_bot_token"
     echo -e "${Green}请输入你的 telegram_chat_id : ${Font}"
     read tg_chat_id
     else
+    tg_token="your_telegram_bot_token"
     tg_chat_id="your_tg_chat_id"
     fi
     sed -i "s|^shconfig_tg_token=\"[^\"]*\"|shconfig_tg_token=\"$tg_token\"|" $config_file
