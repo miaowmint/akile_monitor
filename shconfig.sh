@@ -14,6 +14,7 @@ shconfig_update_uri="" # 监控端与主控端通信用的uri
 shconfig_web_uri="" # 查看网页面板的时候与主控端通信用的uri
 shconfig_hook_uri="" # AkileMonitorBot与主控端通信用的uri
 shconfig_hook_token="" # hook通信使用的token
+shconfig_tg_chat_id="" # TG通知的chat_id
 shconfig_akile_monitor="false"
 # 主控前端
 shconfig_web_port="" # web面板监听端口
